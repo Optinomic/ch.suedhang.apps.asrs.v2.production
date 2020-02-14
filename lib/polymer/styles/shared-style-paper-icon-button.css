@@ -1,0 +1,30 @@
+paper-icon-button.grey {
+  color: var(--paper-grey-500);
+  transition: all 0.3s ease-in-out;
+  --paper-icon-button-ink-color: var(--paper-grey-500);
+}
+
+paper-icon-button.grey:hover {
+  color: var(--paper-grey-800);
+  transform: scale(1.1);
+}
+
+paper-icon-button.pink {
+  color: var(--paper-pink-500);
+  transition: all 0.3s ease-in-out;
+  --paper-icon-button-ink-color: var(--paper-pink-500);
+}
+
+paper-icon-button.pink:hover {
+  transform: scale(1.1);
+}
+
+paper-icon-button.indigo {
+  color: var(--paper-indigo-500);
+  transition: all 0.3s ease-in-out;
+  --paper-icon-button-ink-color: var(--paper-indigo-500);
+}
+
+paper-icon-button.indigo:hover {
+  transform: scale(1.1);
+}

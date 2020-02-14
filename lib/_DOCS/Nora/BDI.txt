@@ -1,0 +1,31 @@
+Object
+BDI1
+BDI2
+BDI3
+BDI4
+BDI5
+BDI6
+BDI7
+BDI8
+BDI9
+BDI10
+BDI11
+BDI12
+BDI13
+BDI14
+BDI15
+BDI16
+BDI17
+BDI18
+BDI19
+BDI20
+BDI21
+
+Ausgabe:
+1. Rohdaten (drinlassen) = data_survey_response
+2. Timeline (drinlassen) = chart_timeline
+3. Score (drinlassen - score & simple score) = simple_score
+4. Range (drinlassen) = score_range
+5. T-Score (rausnehmen) = chart_tscore
+6. Stanine (rausnehmen) = chart_stanine
+7. Export (drinlassen) = data_export / data_download

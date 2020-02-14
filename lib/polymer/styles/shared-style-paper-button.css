@@ -1,0 +1,42 @@
+paper-button {
+  font-family: 'Roboto', 'Noto', sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+paper-button.grey {
+  color: var(--paper-grey-500);
+  --paper-button-ink-color: var(--paper-grey-a200);
+}
+
+paper-button.grey:hover {
+  color: var(--paper-grey-900);
+  background-color: var(--paper-grey-100);
+}
+
+paper-button.pink {
+  color: var(--paper-pink-800);
+  background-color: var(--paper-pink-50);
+  --paper-button-ink-color: var(--paper-pink-500);
+}
+
+paper-button.pink:hover {
+  background-color: var(--paper-pink-500);
+  color: white;
+}
+
+paper-button.indigo {
+  background-color: var(--paper-indigo-50);
+  color: var(--paper-indigo-800);
+  --paper-button-ink-color: var(--paper-pink-500);
+}
+
+paper-button.indigo:hover {
+  background-color: var(--paper-indigo-500);
+  color: white;
+}
+
+paper-button.disabled {
+  color: white;
+}

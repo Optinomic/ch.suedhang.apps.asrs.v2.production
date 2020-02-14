@@ -1,0 +1,48 @@
+<div ng-if="plot_done" style="margin-left:-150px; overflow: hidden; overflow-x:hidden;">
+    <plot ng-attr-width="{{myOptions.screenWidth}}" ng-attr-height="{{myOptions.screenHeight}}" axis-x-label="{{myOptions.axis_label}}" range-x="0,100" axis-y="off" legend-switches>
+        <!-- Decoration -->
+        <area x="[[plot.area_1]]" ymin="[[plot.area_sc_min]]" y="[[plot.area_sc_max]]" fill="#E8EAF6" fill-opacity="0.5">
+        <area x="[[plot.area_2]]" ymin="[[plot.area_sc_min]]" y="[[plot.area_sc_max]]" fill="#C5CAE9" fill-opacity="0.5">
+        <area x="[[plot.area_3]]" ymin="[[plot.area_sc_min]]" y="[[plot.area_sc_max]]" fill="#9FA8DA" fill-opacity="0.5">
+        <lines label="center" x="[[plot.line_mw_x]]" y="[[plot.line_mw_y]]" stroke="black" stroke-width=2>
+        </lines>
+        <!-- Trenner -->
+        <div ng-repeat="line in plot.trenner">
+            <lines x="[[plot.line_x]]" y="[[line]]" stroke="black" stroke-width="1" stroke-opacity="0.2">
+            </lines>
+        </div>
+        <!-- Description -->
+        <points x="[[plot.xs]]" y="[[plot.ys_label]]" marker="text" marker-text="[[plot.titles]]" MARKER-ALIGNMENT="left" MARKER-FONT-SIZE="12" fill="#3F51B5" label="Left Titles">
+        </points>
+        <points x="[[plot.xs_max]]" y="[[plot.ys_label]]" marker="text" marker-text="[[plot.titles]]" MARKER-ALIGNMENT="right" MARKER-FONT-SIZE="12" fill="#3F51B5" label="Right Titles">
+        </points>
+        <!-- Result Line -->
+        <lines ng-repeat="answer in plot.answersShow" y="[[plot.ys]]" x="[[answer.t_scores]]" stroke="[[answer.colour]]" stroke-width="4" stroke-opacity="0.8" label="[[answer.label]]">
+        </lines>
+        <!-- Score Value -->
+        <points ng-if="myOptions.show_scores" ng-repeat="answer in plot.answersShow" x="[[answer.t_scores]]" y="[[plot.ys]]" fill="#ffffff" STROKE="#ffffff" STROKE-WIDTH="0" FILL-OPACITY="0.4" MARKER-SIZE="310">
+        </points>
+        <points ng-if="myOptions.show_scores" ng-repeat="answer in plot.answersShow" x="[[answer.t_scores]]" y="[[plot.ys]]" marker-text="[[answer.t_scores]]" MARKER-ALIGNMENT="center" MARKER-FONT-SIZE="13" MARKER-FONT-WEIGHT="bold" marker="text">
+        </points>
+    </plot>
+</div>
+<div ng-if="plot_done" layout-padding layout="row" layout-xs="column" layout-gt-xs="row" layout-align="start start" style="margin-top:-20px;">
+    <div ng-repeat="me in plot.answers">
+        <md-checkbox class="md-primary" style="color:{{me.colour}};" ng-change="getShowAnswers()" ng-model="me.show" aria-label="{{ me.label }}">
+            {{me.label}}
+            <md-tooltip md-direction="top">
+                {{me.label_datestamp}}
+            </md-tooltip>
+        </md-checkbox>
+    </div>
+    <span flex></span>
+    <div style="margin-top:-20px;">
+        <md-button style="font-size: 18px;" ng-click="myOptions.show_scores = !myOptions.show_scores" class="md-primary md-icon-button" aria-label="{{translations.showScores}}">
+            <i class="mdi mdi-eye" ng-if="!myOptions.show_scores"></i>
+            <i class="mdi mdi-eye-off" ng-if="myOptions.show_scores"></i>
+            <md-tooltip md-direction="left">
+                {{translations.showScores}}: {{myOptions.show_scores}}
+            </md-tooltip>
+        </md-button>
+    </div>
+</div>

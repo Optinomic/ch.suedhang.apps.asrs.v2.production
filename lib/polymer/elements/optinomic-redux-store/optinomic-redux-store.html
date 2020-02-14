@@ -1,0 +1,21 @@
+<!--
+ Copyright 2017 | optinomic-redux-store | Optinomic GmbH.
+ http://www.optinomic.com/
+-->
+<script>
+__opapp_include(../../../polymer/elements/optinomic-redux-store/initialState.js)
+__opapp_include(../../../polymer/elements/optinomic-redux-store/reducer.js)
+__opapp_include(../../../polymer/elements/optinomic-redux-store/actions.js)
+__opapp_include(../../../polymer/elements/optinomic-redux-store/helpers.js)
+__opapp_include(../../../polymer/elements/store/_session.js)
+__opapp_include(../../../polymer/elements/store/_user_store.js)
+
+const store = Redux.createStore(
+    reducer,
+    Redux.applyMiddleware(ReduxThunk.default)
+);
+
+const ReduxBehavior = PolymerRedux(store);
+
+UserStore.start();
+</script>

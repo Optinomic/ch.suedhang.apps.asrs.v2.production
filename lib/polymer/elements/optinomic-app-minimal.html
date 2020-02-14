@@ -1,0 +1,125 @@
+<!--
+@license
+Copyright (c) 2017 Optionmic GmbH. All rights reserved.
+-->
+<link rel="import" href="polymer/polymer.html"> __opapp_include(../../polymer/inculdes.m4)
+<link rel="import" href="iron-icons/iron-icons.html">
+<link rel="import" href="paper-icon-button/paper-icon-button.html">
+<link rel="import" href="paper-progress/paper-progress.html">
+<dom-module id="optinomic-app">
+    <template>
+        <style is="custom-style" include="shared-styles">
+         :host {
+            --app-primary-color: #FAFAFA;
+            --app-secondary-color: #424242;
+            --drawer-primary-color: #424242;
+            --drawer-secondary-color: #EEEEEE;
+            padding: 6px;
+        }
+
+        paper-progress {
+            display: block;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            --paper-progress-active-color: rgba(255, 255, 255, 0.5);
+            --paper-progress-container-color: #9E9E9E;
+        }
+        </style>
+        <template is="dom-if" if="[[_loading]]">
+            <paper-progress value="90" indeterminate bottom-item></paper-progress>
+        </template>
+        <optinomic-template name="template"></optinomic-template>
+        <template is="dom-if" if="[[_isAdmin]]">
+            <div style="margin-top: 64px;margin-bottom: 24px;">
+                <paper-icon-button class="pink" on-tap="_logState" icon="bug-report"></paper-icon-button>
+                <paper-icon-button class="indigo" on-tap="_loadData" icon="refresh"></paper-icon-button>
+            </div>
+        </template>
+    </template>
+    <script>
+    Polymer({
+        is: 'optinomic-app',
+
+        properties: {
+            page: {
+                type: String,
+                reflectToAttribute: true,
+                observer: '_pageChanged',
+            },
+            _loading: {
+                type: Boolean,
+                statePath: 'loading'
+            },
+            _isAdmin: {
+                type: Boolean,
+                statePath: '_app_user.data.isAdmin'
+            },
+        },
+
+        observers: [
+            '_viewPageChanged(page)',
+        ],
+
+        behaviors: [ReduxBehavior, AsyncActionsBehavior],
+
+
+        _init: function() {
+
+            var params = {
+                "userID": parseInt(helpers.getUserID()),
+                "patientID": parseInt(helpers.getPatientID()),
+                "stayID": parseInt(helpers.getStayID()),
+                "token": helpers.getToken(),
+                "appName": helpers.getAppName(),
+                "appID": helpers.getAppID(),
+                "apiURL": helpers.getApiURL(),
+            };
+
+            this.dispatch('actionSaveParams', params);
+        },
+
+        _viewPageChanged: function(page) {
+            this.page = page || 'template';
+        },
+
+        _pageChanged: function(page) {
+            //console.log('_pageChanged', page);
+        },
+
+        _showPage404: function() {
+            this.page = '404';
+        },
+
+        _logState: function() {
+            var state = this.getState();
+            console.log('(✔) state', state);
+        },
+
+        _loadData: function() {
+            Polymer.RenderStatus.afterNextRender(this, function() {
+                console.warn('(START) _loadData');
+
+                // loadData
+                this.dispatch('actionGetCurrentUser');
+                this.dispatch('actionGetApps');
+                // this.dispatch('actionGetCurrentPatient');
+                // this.dispatch('actionGetCurrentPatientStays');
+                this.dispatch('actionGetClinic');
+
+                this._logState();
+            });
+        },
+
+        ready: function() {
+            Polymer.RenderStatus.afterNextRender(this, function() {
+                this._init();
+                this._loadData();
+            });
+        },
+
+    });
+    </script>
+</dom-module>

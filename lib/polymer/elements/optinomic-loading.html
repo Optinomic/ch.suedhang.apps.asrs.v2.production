@@ -1,0 +1,47 @@
+<!--
+ Copyright 2017 | Optinomic GmbH.
+ http://www.optinomic.com/
+-->
+
+<base href="https://cdn.jsdelivr.net/gh/download/polymer-cdn@upgrade-to-1.8.0/lib/">
+
+<link rel="import" href="iron-icon/iron-icon.html">
+<link rel="import" href="polymer/polymer.html">
+<link rel="import" href="paper-progress/paper-progress.html">
+<link rel="import" href="https://cdn.rawgit.com/Optinomic/apps/4b9e90d1/lib/polymer/elements/optinomic-redux-store.html">
+
+<dom-module id="optinomic-loading">
+    <template>
+        <style include="shared-styles">
+        :host {
+            display: block;
+        }
+        
+        .loading_box {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            margin-bottom: 3px;
+        }
+        </style>
+        <template is="dom-if" if="[[loading]]">
+            <div class="loading_box">
+                <paper-progress indeterminate class="pink"></paper-progress>
+            </div>
+        </template>
+    </template>
+    <script>
+    Polymer({
+        is: 'optinomic-loading',
+        behaviors: [ReduxBehavior],
+        properties: {
+            loading: {
+                type: Boolean,
+                statePath: 'loading'
+            }
+        }
+    });
+    </script>
+</dom-module>

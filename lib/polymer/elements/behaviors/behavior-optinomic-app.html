@@ -1,0 +1,107 @@
+<script>
+optinomicApp = {
+
+
+    behaviors: [ReduxBehavior, AsyncActionsBehavior],
+
+
+    properties: {
+        _clinic: {
+            type: Object,
+            statePath: 'clinic.data'
+        },
+        _app_params: {
+            type: Object,
+            statePath: '_app_params'
+        },
+        _current_app: {
+            type: Object,
+            statePath: 'apps.current.data'
+        },
+        _current_patient: {
+            type: Object,
+            statePath: function(state) {
+                var return_obj = null;
+                if ((state.patient !== null) && (state.patient !== undefined)) {
+                    if ((state.patient.data !== null) && (state.patient.data !== undefined)) {
+                        return_obj = state.patient.data;
+                        // console.log('(_B_) Patient:', return_obj);
+                    };
+                };
+                return return_obj;
+            }
+        },
+        _current_stay: {
+            type: Object,
+            statePath: function(state) {
+                var return_obj = null;
+                var stay_id = parseInt(helpers.getStayID());
+
+                if ((state.stays !== null) && (state.stays !== undefined)) {
+                    if ((state.stays.data !== null) && (state.stays.data !== undefined)) {
+
+                        state.stays.data.forEach(function(stay, stayID) {
+                            if (stay.id === stay_id) {
+                                return_obj = stay.data;
+                                // console.log('(_B_) Stay:', return_obj);
+                            };
+                        });
+
+                    };
+                };
+
+                return return_obj;
+            }
+        }
+    },
+
+
+
+    // --------------------------------
+    // Helpers
+    // --------------------------------
+    _formatDateCH: function(date_string) {
+        date_string = date_string || null
+        if (date_string !== null) {
+
+            // 1952-11-19T00:00:00.000000000000Z
+            var year = parseInt(date_string.substring(0, 4));
+            var month = parseInt(date_string.substring(5, 7));
+            var day = parseInt(date_string.substring(8, 10));
+            var date_string_return = day + "." + month + "." + year
+
+            return date_string_return;
+        } else {
+            return null;
+        }
+    },
+
+    _hrefAppTemplate: function(app, template) {
+        app = app || null
+        template = template || null
+        var url_string = "";
+
+        if ((app !== null) && (template !== null) && (this._app_params !== null) && (this._app_params !== undefined)) {
+
+            var _app_params = this.get('_app_params');
+
+            url_string = _app_params.apiURL + "modules/" + app + "/view/" + template + "#patient_id=" + _app_params.patientID + ",token=" + _app_params.token + ",app_name=" + _app_params.appName + ",app_id=" + app + ",api_url=" + _app_params.apiURL + ",user_id=" + _app_params.userID + ",stay_id=" + _app_params.stayID;
+
+            //  http://optinomic.cust.local/api/modules/ch.suedhang.apps.fallkonferenz.production/view/overview#patient_id=2096,token=6e4bf5b9-abd0-48e3-b0a3-ade05b480387,app_name=Test :: Fallkonferenz,app_id=ch.suedhang.apps.fallkonferenz.production,api_url=http://optinomic.cust.local/api/,user_id=2,stay_id=1569
+
+        };
+
+        return url_string;
+    },
+
+
+
+    // --------------------------------
+    // Liefecycle
+    // --------------------------------
+
+    created: function() {
+        console.log('optinomicAppBehavior enabled for ', this, helpers.getPatientID(), helpers.getStayID());
+    }
+};
+</script>

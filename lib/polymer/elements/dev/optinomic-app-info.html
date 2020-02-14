@@ -1,0 +1,195 @@
+<dom-module id="optinomic-app-info">
+    <template>
+        <style include="shared-styles iron-flex iron-flex-alignment">
+         :host {
+            display: block;
+            font-family: 'Roboto', 'Noto', sans-serif;
+        }
+
+        .button_top {
+            float: right;
+            margin-top: -5px;
+        }
+
+        .read_more {
+            color: #9E9E9E;
+            cursor: help;
+        }
+
+
+        .title {
+            margin-top: 24px !important;
+            margin-bottom: 6px !important;
+            color: #212121;
+        }
+
+        .readme_container {
+            background-color: #FAFAFA;
+            border-style: solid;
+            border-color: #EEEEEE;
+            border-width: 1px;
+            border-radius: 3px;
+            padding-top: 18px;
+            padding-bottom: 18px;
+            padding-left: 36px;
+            padding-right: 36px;
+        }
+        </style>
+        <!-- START -->
+        <template is="dom-if" if="[[_current_app.found]]">
+            <div>
+                <div class="button_top">
+                    <div hidden$="[[_show_help]]">
+                        <paper-icon-button class="grey" on-tap="__toggleHelp" icon="help-outline"></paper-icon-button>
+                    </div>
+                    <div hidden$="[[!_show_help]]">
+                        <paper-icon-button class="grey" on-tap="__toggleHelp" icon="close"></paper-icon-button>
+                    </div>
+                </div>
+                <p><b>[[_current_app.app.short_description]]</b>&nbsp;[[_current_app.app.description]]&nbsp;<span on-tap="__toggleHelp" class="read_more">[ Weiterlesen ]</span></p>
+                <iron-collapse id="collapse_help" horizontal>
+                    <h2>[[_current_app.app.name]]</h2>
+                    <p class="caption" style="margin-top:-18px;">Version:[[_current_app.app.version]] | ID:[[_current_app.app.identifier]]</p>
+                    <h4 class="title">Entwickler</h4>
+                    <div class="readme_container">
+                        <p>[[_current_app.app.developer.company]]
+                            <br>[[_current_app.app.developer.first_name]] [[_current_app.app.developer.last_name]]
+                            <br><a href$="mailto:[[_current_app.app.developer.email]]">[[_current_app.app.developer.email]]</a>
+                            <br>[[_current_app.app.developer.phone]]
+                            <br><a href$="[[_current_app.app.developer.website]]" target="_blank">[[_current_app.app.developer.website]]</a>
+                        </p>
+                    </div>
+                    <h4 class="title">Hile (Readme)</h4>
+                    <div class="readme_container">
+                        <div id="readme"></div>
+                        <p><span on-tap="__toggleHelp" class="read_more">[ Schliessen ]</span></p>
+                    </div>
+                </iron-collapse>
+            </div>
+        </template>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'optinomic-app-info',
+
+        behaviors: [ReduxBehavior, AsyncActionsBehavior],
+
+        properties: {
+            appID: {
+                type: String
+            },
+            _current_app: {
+                type: Object,
+                statePath: function(state) {
+                    var return_obj = {
+                        "found": false,
+                        "app": {}
+                    };
+                    if ((this.appId !== null) && (this.appId !== undefined)) {
+                        if ((state.apps.all.patient_modules !== null) && (state.apps.all.patient_modules !== undefined)) {
+                            var appId = this.appId;
+                            state.apps.all.patient_modules.forEach(function(pm, appID) {
+                                if (pm.identifier === appId) {
+                                    return_obj = return_obj = {
+                                        "found": true,
+                                        "app": pm
+                                    };
+                                };
+                            });
+                        };
+                    };
+                    return return_obj;
+                },
+                observer: '_buildPDF'
+            },
+            pdfContent: {
+                type: Object,
+                reflectToAttribute: true,
+                notify: true
+            }
+        },
+
+
+        // -------------------------------------
+        // User - Click Functions
+        // -------------------------------------
+
+        __toggleHelp: function() {
+            var _show_help = this.get('_show_help');
+            _show_help = !_show_help;
+
+            var readme_box = this.$$('#readme');
+            // var readme_box = this.$.readme;
+            readme_box.innerHTML = this._current_app.app.readme_html;
+
+            var collapse_help = this.$$('#collapse_help');
+            collapse_help.toggle();
+
+
+            this.set('_show_help', _show_help);
+            // console.log('(Toggle) Help', _show_help);
+        },
+
+
+
+        // -------------------------------------
+        // Functions
+        // -------------------------------------
+
+
+
+        _hasValue: function(value) {
+            if ((value === null) || (value === "null") || (value === undefined) || (value === "")) {
+                return false;
+            } else {
+                return true;
+            };
+        },
+
+
+        _buildPDF: function() {
+            var _current_app = this.get('_current_app');
+            if (_current_app.found) {
+
+
+                var make_pdf = {
+                    "id": "app_description",
+                    "style": "p",
+                    "text": [{
+                            "text": _current_app.app.short_description,
+                            "bold": true
+                        },
+                        {
+                            "text": " "
+                        },
+                        {
+                            "text": _current_app.app.description,
+                            "bold": false
+                        }
+                    ]
+                };
+
+                var copy_make_pdf = JSON.parse(JSON.stringify(make_pdf));
+
+                this.set('pdfContent', copy_make_pdf);
+                this.fire('pdfready-app-info', copy_make_pdf);
+
+                // console.log('(PDF) App-Info', this.pdfContent);
+            };
+        },
+
+
+        // -------------------------------------
+        // Lifetime
+        // -------------------------------------
+        ready: function() {
+            this.set('_show_help', false);
+        },
+
+        attached: function() {},
+
+
+    });
+    </script>
+</dom-module>

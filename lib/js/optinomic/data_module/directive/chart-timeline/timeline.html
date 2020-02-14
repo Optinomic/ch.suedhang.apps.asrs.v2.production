@@ -1,0 +1,19 @@
+<div>
+    <div layout="row" layout-xs="row" layout-gt-xs="row" layout-fill layout-align="space-between center">
+        <h3 class="md-headline">{{myOptions.title}}</h3>
+        <md-input-container>
+            <md-select class="md-subhead" ng-model="myOptions.defaultChart" aria-label="{{myOptions.title}}">
+                <md-option ng-repeat="chart in chartTypes" value="{{chart.name}}">{{chart.title}}</md-option>
+            </md-select>
+        </md-input-container>
+        <div style="margin-top: 6px;" ng-if="myOptions.fillDates">
+            <md-switch ng-model="myOptions.fillDates" aria-label="{{translations.fill}}">
+                {{translations.fill}}
+            </md-switch>
+        </div>
+    </div>
+    <div style="margin-top: -12px;">
+        <canvas height="{{myOptions.screenHeight}}" width="{{myOptions.screenWidth}}" id="line_chart" class="chart chart-line" data="dateChart.data" labels="dateChart.labels" series="dateCharts.series" options="chartOptions" legend="false">
+        </canvas>
+    </div>
+</div>

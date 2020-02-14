@@ -1,0 +1,26 @@
+ __opapp_include(../lib/html/optinomic/page/start.m4)
+<h3 class="md-headline">Auswertung</h3>
+<div class="grid-border-top" style="margin-top: 30px;" ng-repeat="response in d.dataMain.survey_responses">
+    <div layout="row" layout-xs="row" layout-gt-xs="row" layout-align="space-between center">
+        <div flex>
+            <p>{{response.entity.data.filled | date}}</p>
+            <h3 class="md-headline">{{response.calculations["0"].calculation_result.score.current_range.interpretation}}</h3>
+        </div>
+    </div>
+    <score-threshold score="response.calculations[0].calculation_result.score.score" min="0" max="6" scale-ranges="scale_ranges"></score-threshold>
+    <p class="flow-text"><b>{{response.calculations["0"].calculation_result.score.score}}</b> der 6 Screeningfragen lagen im auffälligen Bereich. ({{response.calculations["0"].calculation_result.score.sum}} von 24 Punkten) </p>
+    <!--{{d.dataMain.patient.patient.data.first_name}} {{d.dataMain.patient.patient.data.last_name}} -->
+    <div style="margin-top: 48px;">
+        <div layout="row" layout-xs="row" layout-gt-xs="row" layout-align="space-between center">
+            <p class="small">ASRS_1 = {{response.entity.data.response.ASRS_1}}</p>
+            <p class="small">ASRS_2 = {{response.entity.data.response.ASRS_2}}</p>
+            <p class="small">ASRS_3 = {{response.entity.data.response.ASRS_3}}</p>
+            <p class="small">ASRS_4 = {{response.entity.data.response.ASRS_4}}</p>
+            <p class="small">ASRS_5 = {{response.entity.data.response.ASRS_5}}</p>
+            <p class="small">ASRS_6 = {{response.entity.data.response.ASRS_6}}</p>
+            <p class="small">SCORE = {{response.calculations["0"].calculation_result.score.score}}</p>
+            <p class="small">SUMME = {{response.calculations["0"].calculation_result.score.sum}}</p>
+        </div>
+    </div>
+</div>
+__opapp_include(../lib/html/optinomic/page/end.m4)
